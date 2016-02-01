@@ -1,4 +1,4 @@
-package com.finder;
+package com.finder.app;
 
 /**
  * Hello world!
