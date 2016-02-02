@@ -10,7 +10,7 @@ import org.codehaus.jettison.json.JSONException;
 import com.finder.dto.Borders;
 
 public interface FinderService{
-	public Map<String, Borders> getJSONFile(String fileLoc) throws IOException, JSONException;
+	public Map<String, Borders> getJSONFile() throws IOException, JSONException;
 
 	public String getLocationFromFile(String lattitude, String longitude) throws IOException, JSONException;
 }
