@@ -6,7 +6,7 @@ import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
 public class LocationFinderApplication extends ResourceConfig{
 
 	public LocationFinderApplication(){
-		packages("com.finder.application");
+		packages("com.finder");
 		register(RequestContextFilter.class);
 	}
 }
