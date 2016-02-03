@@ -76,12 +76,13 @@ public class FinderServiceImpl implements FinderService {
 				if(borderQuery.getLattitude().equals(border.getLattitude())
 						&& borderQuery.getLongitude().equals(border.getLongitude())){
 					state = loc;
+					logger.debug("ARE THERE MORE STATES?!: {}", state);
 					break;
 				}
 			}
 		}
 		
-		return state;
+		return state+"\n";
 	}
 
 	public Resource getRefFile() {
