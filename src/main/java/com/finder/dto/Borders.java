@@ -11,7 +11,6 @@ import com.finder.service.FinderServiceImpl;
 import math.geom2d.Point2D;
 
 public class Borders {
-	private Logger logger = LoggerFactory.getLogger(FinderServiceImpl.class);
 	private List<Point2D> borders = new ArrayList<Point2D>();
 
 	public Borders() {}
@@ -24,8 +23,6 @@ public class Borders {
 			o = o.replaceAll("[^\\d.,-]","");
 			String[] oCoords = o.split(",");
 			Point2D borderPoint = new Point2D(Double.parseDouble(oCoords[0]), Double.parseDouble(oCoords[1]));
-//			b.setLattitude(Double.parseDouble(oCoords[0]));
-//			b.setLongitude(Double.parseDouble(oCoords[1]));
 			borderList.add(borderPoint);
 		}
 		borders = borderList;

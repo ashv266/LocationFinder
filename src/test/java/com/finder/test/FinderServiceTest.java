@@ -30,9 +30,8 @@ public class FinderServiceTest extends AbstractTestNGSpringContextTests{
 	
 	@Test(enabled=true)
 	public void testGetJSONFile() throws IOException, JSONException {
-		Map<String, Borders> locations= finderService.getJSONFile();
-		logger.info("This is the locations array: {}, size: {}", locations.get("Washington"), locations.get("Washington").getBorders().size());
-		
+		//Map<String, Borders> locations= finderService.getFileContentsAsMap();
+		//logger.info("This is the locations array: {}, size: {}", locations.get("Washington"), locations.get("Washington").getBorders().size());
 	}
 	
 	@Test(enabled=true)

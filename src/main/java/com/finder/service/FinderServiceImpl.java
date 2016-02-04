@@ -7,21 +7,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-
+import javax.annotation.PostConstruct;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-
-import com.finder.dto.Border;
 import com.finder.dto.Borders;
-
 import math.geom2d.Point2D;
 import math.geom2d.polygon.SimplePolygon2D;
 
@@ -35,13 +31,13 @@ public class FinderServiceImpl implements FinderService {
 	@Value("classpath:/states.json")
 	private Resource refFile;
 	
+	private static Map<String, SimplePolygon2D> locMap = new HashMap<String, SimplePolygon2D>();
+	
 	@SuppressWarnings("unchecked")
-	@Override
-	@Bean
-	public Map<String, Borders> getJSONFile() throws IOException, JSONException {
+	@PostConstruct
+	private void getFileContentsAsMap() throws IOException, JSONException {
 		logger.info("Getting locations from file...({})");
 		Borders borders = new Borders();
-		Map<String, Borders> locMap = new HashMap<String, Borders>();
 		
         try{
         	String[] locs = null;
@@ -54,31 +50,12 @@ public class FinderServiceImpl implements FinderService {
         			break;
         		JSONObject stateStats = new JSONObject(line);
         		String key = stateStats.getString("state");
-        		//TODO: Move lat long coords to Polygon and avoid Borders classes
         		borders = new Borders(stateStats.get("border").toString());
-        		locMap.put(key, borders);
+        		locMap.put(key, getStatePolygon(borders.getBorders()));
         	}
         }catch(Exception e){
         	logger.error("FinderServiceImpl.getJSONFile(String fileLocation): Error getting file data.",e);
         }
-
-		return locMap;
-	}
-
-	@Override
-	public Map<String, SimplePolygon2D> setPolygon() throws IOException, JSONException{
-		Map<String, Borders> borders = getJSONFile();
-		Map<String, SimplePolygon2D> statePolygonMap = new HashMap<String, SimplePolygon2D>();
-		
-		for(String state : borders.keySet()){
-			try{
-				List<Point2D> indBorder = borders.get(state).getBorders();
-				statePolygonMap.put(state, getStatePolygon(indBorder));
-			}catch(Exception e){
-				logger.error("Error creating a polygon for state:{}",state, e);
-			}
-		}
-		return statePolygonMap;
 	}
 	
 	private SimplePolygon2D getStatePolygon(List<Point2D> indBorder){
@@ -92,13 +69,12 @@ public class FinderServiceImpl implements FinderService {
 	
 	@Override
 	public String getPointState(String lattitude, String longitude) throws IOException, JSONException{
-		Map<String, SimplePolygon2D> statePolygonMap = setPolygon();
 		Point2D queryPoints = new Point2D(Double.parseDouble(lattitude), Double.parseDouble(longitude));
 		
 		String foundState = new String();
-		for(String state : statePolygonMap.keySet()){
+		for(String state : locMap.keySet()){
 			try{
-				if(statePolygonMap.get(state).contains(queryPoints)){
+				if(locMap.get(state).contains(queryPoints)){
 					foundState = state;
 					break;
 				}
