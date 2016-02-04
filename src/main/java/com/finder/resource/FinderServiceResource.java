@@ -28,27 +28,26 @@ public class FinderServiceResource {
 	@Autowired
 	FinderService finderService;
 	
-//	@GET
-//	@Path("lattitude/{lattitude}/longitude/{longitude}")
-//	@Produces(MediaType.APPLICATION_JSON_VALUE)
-//	public Response getLocation(@PathParam("lattitude") String lattitude, @PathParam("longitude") String longitude){
-//		String state = new String();
-//		try{
-//			state = finderService.getLocationFromFile(lattitude, longitude);
-//		}catch(Exception e){
-//			logger.error("FinderServiceResource.getLocations(lattitude:{}, longitude:{})", lattitude, longitude);
-//			return Response.serverError().entity(state).build();
-//		}
-//		
-//		return Response.ok()
-//				.entity(state)
-//				.header("Access-Control-Allow-Origin", "*")
-//				.header("Access-Control-Allow-Methods", "GET<POST<DELETE<PUT")
-//				.allow("OPTIONS").build();
-//	}
+	@GET
+	@Path("lattitude/{lattitude}/longitude/{longitude}")
+	@Produces(MediaType.APPLICATION_JSON_VALUE)
+	public Response getLocation(@PathParam("lattitude") String lattitude, @PathParam("longitude") String longitude){
+		String state = new String();
+		try{
+			state = finderService.getLocationFromFile(lattitude, longitude);
+		}catch(Exception e){
+			logger.error("FinderServiceResource.getLocations(lattitude:{}, longitude:{})", lattitude, longitude);
+			return Response.serverError().entity(state).build();
+		}
+		
+		return Response.ok()
+				.entity(state)
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET<POST<DELETE<PUT")
+				.allow("OPTIONS").build();
+	}
 	
 	@POST
-	//@Path("{coords}")
 	@Consumes("application/x-www-form-urlencoded")
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	public Response getStaticLocation(@FormParam("latitude") String latitude,@FormParam("longitude") String longitude ){

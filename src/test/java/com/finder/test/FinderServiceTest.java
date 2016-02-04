@@ -40,4 +40,10 @@ public class FinderServiceTest extends AbstractTestNGSpringContextTests{
 		String state = finderService.getLocationFromFile("-68.230807", "47.352148");
 		logger.info("STATE FOUND: {}", state);
 	}
+	
+	@Test(enabled=true)
+	public void getPointStateTest() throws IOException, JSONException{
+		String state = finderService.getPointState("-68.230807", "47.352148");
+		logger.info("STATE FOUND FROM POLYGON: {}", state);
+	}
 }
