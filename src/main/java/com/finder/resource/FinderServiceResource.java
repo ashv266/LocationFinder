@@ -1,5 +1,8 @@
 package com.finder.resource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
@@ -32,16 +35,16 @@ public class FinderServiceResource {
 	@Path("lattitude/{lattitude}/longitude/{longitude}")
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	public Response getLocation(@PathParam("lattitude") String lattitude, @PathParam("longitude") String longitude){
-		String state = new String();
+		List<String> statesFound = new ArrayList<String>();
 		try{
-			state = finderService.getPointState(lattitude, longitude);
+			statesFound = finderService.getPointState(lattitude, longitude);
 		}catch(Exception e){
 			logger.error("FinderServiceResource.getLocations(lattitude:{}, longitude:{})", lattitude, longitude);
-			return Response.serverError().entity(state).build();
+			return Response.serverError().entity(statesFound).build();
 		}
 		
 		return Response.ok()
-				.entity(state)
+				.entity(statesFound)
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET<POST<DELETE<PUT")
 				.allow("OPTIONS").build();
@@ -51,17 +54,17 @@ public class FinderServiceResource {
 	@Consumes("application/x-www-form-urlencoded")
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	public Response getStateFromCoordinates(@FormParam("latitude") String latitude,@FormParam("longitude") String longitude ){
-		String state = null;
+		List<String> statesFound = null;
 		try{
-			state = finderService.getPointState(latitude, longitude);
+			statesFound = finderService.getPointState(latitude, longitude);
 		}catch(Exception e){
 			logger.error("FinderServiceResource.getLocations(lattitude:{}, longitude:{})",e);
-			return Response.serverError().entity(state).build();
+			return Response.serverError().entity(statesFound).build();
 		}
 		
-		logger.debug("This is state from curl:state={},latitude={}, longitude={}", state, latitude, longitude);
+		logger.debug("This is state from curl:state={},latitude={}, longitude={}", statesFound, latitude, longitude);
 		return Response.ok()
-				.entity(state)
+				.entity(statesFound)
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET<POST<DELETE<PUT")
 				.allow("OPTIONS").build();

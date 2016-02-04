@@ -3,6 +3,7 @@ package com.finder.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -48,14 +49,18 @@ public class FinderServiceImpl implements FinderService {
         	for(String line : locs){
         		if (line == null)
         			break;
-        		JSONObject stateStats = new JSONObject(line);
-        		String key = stateStats.getString("state");
-        		borders = new Borders(stateStats.get("border").toString());
-        		locMap.put(key, getStatePolygon(borders.getBorders()));
+        		borders = getBordersFromLineInFile(line);
+        		locMap.put(borders.getState(), getStatePolygon(borders.getBorders()));
         	}
         }catch(Exception e){
         	logger.error("FinderServiceImpl.getJSONFile(String fileLocation): Error getting file data.",e);
         }
+	}
+	
+	private Borders getBordersFromLineInFile(String line) throws JSONException{
+		JSONObject stateStats = new JSONObject(line);
+		String key = stateStats.getString("state");
+		return new Borders(stateStats.get("border").toString(), key);
 	}
 	
 	private SimplePolygon2D getStatePolygon(List<Point2D> indBorder){
@@ -68,22 +73,23 @@ public class FinderServiceImpl implements FinderService {
 	}
 	
 	@Override
-	public String getPointState(String lattitude, String longitude) throws IOException, JSONException{
+	public List<String> getPointState(String lattitude, String longitude) throws IOException, JSONException{
 		Point2D queryPoints = new Point2D(Double.parseDouble(lattitude), Double.parseDouble(longitude));
-		
 		String foundState = new String();
+		List<String> statesFound = new ArrayList<String>();
+		
 		for(String state : locMap.keySet()){
 			try{
 				if(locMap.get(state).contains(queryPoints)){
 					foundState = state;
-					break;
+					statesFound.add(foundState);
 				}
 			}catch(Exception e){
 				logger.error("Error checking for state in FinderServiceImpl.getPointState(lattitude={}, longitude={})", lattitude, longitude, e);
 			}
 		}
 		
-		return foundState; 
+		return statesFound; 
 	}
 
 	public Resource getRefFile() {

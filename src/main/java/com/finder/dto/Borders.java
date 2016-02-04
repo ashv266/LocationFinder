@@ -12,10 +12,11 @@ import math.geom2d.Point2D;
 
 public class Borders {
 	private List<Point2D> borders = new ArrayList<Point2D>();
+	private String state = new String();
 
 	public Borders() {}
 	
-	public Borders(String coords){
+	public Borders(String coords, String state){
 		List<Point2D> borderList = new ArrayList<Point2D>();
 		coords = stripList(coords);
 		String[] bList = coords.split("],");
@@ -25,7 +26,8 @@ public class Borders {
 			Point2D borderPoint = new Point2D(Double.parseDouble(oCoords[0]), Double.parseDouble(oCoords[1]));
 			borderList.add(borderPoint);
 		}
-		borders = borderList;
+		this.borders = borderList;
+		this.state = state;
 	}
 	
 	public String stripList(String coords){
@@ -40,6 +42,14 @@ public class Borders {
 
 	public void setBorders(List<Point2D> borders) {
 		this.borders = borders;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 	
 }
