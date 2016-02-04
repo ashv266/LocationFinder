@@ -70,18 +70,17 @@ public class FinderServiceImpl implements FinderService {
 		Map<String, Borders> locMap = new HashMap<String, Borders>();
 		locMap = getJSONFile();
 		Border border = new Border();
-		border.setLattitude(lattitude);
-		border.setLongitude(longitude);
+		border.setLattitude(Double.parseDouble(lattitude));
+		border.setLongitude(Double.parseDouble(longitude));
 		String state = null;
 		
 		
 		for(String loc : locMap.keySet()){
 			List<Border> borders = locMap.get(loc).getBorders();
 			for(Border borderQuery : borders){
-				if(borderQuery.getLattitude().equals(border.getLattitude())
-						&& borderQuery.getLongitude().equals(border.getLongitude())){
+				if(borderQuery.getLattitude() == border.getLattitude()
+						&& borderQuery.getLongitude() == (border.getLongitude())){
 					state = loc;
-					logger.debug("ARE THERE MORE STATES?!: {}", state);
 					break;
 				}
 			}
@@ -98,27 +97,30 @@ public class FinderServiceImpl implements FinderService {
 		
 		for(String state : borders.keySet()){
 			try{
-				SimplePolygon2D statePolygon = new SimplePolygon2D();
 				List<Border> indBorder = borders.get(state).getBorders();
-				ListIterator<Border> listIterator = indBorder.listIterator(indBorder.size());
-//					for(Border coords:indBorder){
-				while(listIterator.hasPrevious()){
-						//TODO: Change getLattitude to return Double
-						Border index = listIterator.previous();
-						Double lat = Double.parseDouble(index.getLattitude());
-						Double lon = Double.parseDouble(index.getLongitude());
-						Point2D point = new Point2D(lat, lon);
-						statePolygon.addVertex(point);
-					}
-					//TODO: break down into functions here
-					statePolygonMap.put(state, statePolygon);
-					logger.debug("These are the coordinates for each state:{}, vertices:{}", state, statePolygon.vertices());
-					//TODO: Add logging and error catching
+				statePolygonMap.put(state, getStatePolygon(indBorder));
 			}catch(Exception e){
 				logger.error("Error creating a polygon for state:{}",state, e);
 			}
 		}
 		return statePolygonMap;
+	}
+	
+	private SimplePolygon2D getStatePolygon(List<Border> indBorder){
+		SimplePolygon2D statePolygon = new SimplePolygon2D();
+		ListIterator<Border> listIterator = indBorder.listIterator(indBorder.size());
+		while(listIterator.hasPrevious()){
+				statePolygon.addVertex(getPointFromBorder(listIterator.previous()));
+			}
+		return statePolygon;
+	}
+	
+	private Point2D getPointFromBorder(Border borderSet){
+		//TODO: Change Border attributes to return Double
+		Double lat = borderSet.getLattitude();
+		Double lon = borderSet.getLongitude();
+		Point2D point = new Point2D(lat, lon);
+		return point;
 	}
 	
 	@Override

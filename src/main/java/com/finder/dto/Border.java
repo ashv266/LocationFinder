@@ -2,21 +2,21 @@ package com.finder.dto;
 
 public class Border {
 
-	private String lattitude;
-	private String longitude;
+	private double lattitude;
+	private double longitude;
 	
 	public Border(){}
 	
-	public String getLattitude() {
+	public double getLattitude() {
 		return lattitude;
 	}
-	public void setLattitude(String lattitude) {
-		this.lattitude = lattitude;
+	public void setLattitude(double d) {
+		this.lattitude = d;
 	}
-	public String getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
-	public void setLongitude(String longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 }

@@ -50,10 +50,10 @@ public class FinderServiceResource {
 	@POST
 	@Consumes("application/x-www-form-urlencoded")
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
-	public Response getStaticLocation(@FormParam("latitude") String latitude,@FormParam("longitude") String longitude ){
+	public Response getStateFromCoordinates(@FormParam("latitude") String latitude,@FormParam("longitude") String longitude ){
 		String state = null;
 		try{
-			state = finderService.getLocationFromFile(latitude, longitude);
+			state = finderService.getPointState(latitude, longitude);
 		}catch(Exception e){
 			logger.error("FinderServiceResource.getLocations(lattitude:{}, longitude:{})",e);
 			return Response.serverError().entity(state).build();

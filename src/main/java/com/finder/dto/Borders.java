@@ -22,8 +22,8 @@ public class Borders {
 			Border b = new Border();
 			o = o.replaceAll("[^\\d.,-]","");
 			String[] oCoords = o.split(",");
-			b.setLattitude(oCoords[0]);
-			b.setLongitude(oCoords[1]);
+			b.setLattitude(Double.parseDouble(oCoords[0]));
+			b.setLongitude(Double.parseDouble(oCoords[1]));
 			borderList.add(b);
 		}
 		borders = borderList;
