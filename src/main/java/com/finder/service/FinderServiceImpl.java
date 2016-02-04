@@ -34,6 +34,11 @@ public class FinderServiceImpl implements FinderService {
 	
 	private static Map<String, SimplePolygon2D> locMap = new HashMap<String, SimplePolygon2D>();
 	
+	/*
+	 * @PostConstruct executes this method on startup and executes these instructions. It set the locMap above for use by other methods.
+	 * In this method, the states.json file is read form src/main/resources and parsed line by line, into a map.
+	 * The map is keyed by states, with values of Polygonal points (vertices).
+	 */
 	@SuppressWarnings("unchecked")
 	@PostConstruct
 	private void getFileContentsAsMap() throws IOException, JSONException {
@@ -50,28 +55,39 @@ public class FinderServiceImpl implements FinderService {
         		if (line == null)
         			break;
         		borders = getBordersFromLineInFile(line);
-        		locMap.put(borders.getState(), getStatePolygon(borders.getBorders()));
+        		locMap.put(borders.getState(), getStateShape(borders.getBorders()));
         	}
         }catch(Exception e){
         	logger.error("FinderServiceImpl.getJSONFile(String fileLocation): Error getting file data.",e);
         }
 	}
 	
+	/*
+	 * Returns the borders of each state from line read of json file 
+	 */
 	private Borders getBordersFromLineInFile(String line) throws JSONException{
 		JSONObject stateStats = new JSONObject(line);
 		String key = stateStats.getString("state");
 		return new Borders(stateStats.get("border").toString(), key);
 	}
 	
-	private SimplePolygon2D getStatePolygon(List<Point2D> indBorder){
-		SimplePolygon2D statePolygon = new SimplePolygon2D();
+	/*
+	 * Sets the shape of the state by taking into account the vertices associated with each state in file
+	 */
+	private SimplePolygon2D getStateShape(List<Point2D> indBorder){
+		SimplePolygon2D stateShape = new SimplePolygon2D();
 		ListIterator<Point2D> listIterator = indBorder.listIterator(indBorder.size());
 		while(listIterator.hasPrevious()){
-				statePolygon.addVertex(listIterator.previous());
-			}
-		return statePolygon;
+			stateShape.addVertex(listIterator.previous());
+		}
+		return stateShape;
 	}
 	
+	/*
+	 * Returns the state for query parameters from URL. If the lattitudes and longitudes passed in lie within the StateShape defined
+	 * above in getStateShape(), the state from locMap is returned.
+	 * @see com.finder.service.FinderService#getPointState(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public List<String> getPointState(String lattitude, String longitude) throws IOException, JSONException{
 		Point2D queryPoints = new Point2D(Double.parseDouble(lattitude), Double.parseDouble(longitude));
