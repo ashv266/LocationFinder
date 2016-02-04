@@ -34,7 +34,7 @@ public class FinderServiceResource {
 	public Response getLocation(@PathParam("lattitude") String lattitude, @PathParam("longitude") String longitude){
 		String state = new String();
 		try{
-			state = finderService.getLocationFromFile(lattitude, longitude);
+			state = finderService.getPointState(lattitude, longitude);
 		}catch(Exception e){
 			logger.error("FinderServiceResource.getLocations(lattitude:{}, longitude:{})", lattitude, longitude);
 			return Response.serverError().entity(state).build();

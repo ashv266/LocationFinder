@@ -66,38 +66,13 @@ public class FinderServiceImpl implements FinderService {
 	}
 
 	@Override
-	public String getLocationFromFile(String lattitude, String longitude) throws IOException, JSONException{
-		Map<String, Borders> locMap = new HashMap<String, Borders>();
-		locMap = getJSONFile();
-		Border border = new Border();
-		border.setLattitude(Double.parseDouble(lattitude));
-		border.setLongitude(Double.parseDouble(longitude));
-		String state = null;
-		
-		
-		for(String loc : locMap.keySet()){
-			List<Border> borders = locMap.get(loc).getBorders();
-			for(Border borderQuery : borders){
-				if(borderQuery.getLattitude() == border.getLattitude()
-						&& borderQuery.getLongitude() == (border.getLongitude())){
-					state = loc;
-					break;
-				}
-			}
-		}
-		
-		return state+"\n";
-	}
-	
-	
-	@Override
 	public Map<String, SimplePolygon2D> setPolygon() throws IOException, JSONException{
 		Map<String, Borders> borders = getJSONFile();
 		Map<String, SimplePolygon2D> statePolygonMap = new HashMap<String, SimplePolygon2D>();
 		
 		for(String state : borders.keySet()){
 			try{
-				List<Border> indBorder = borders.get(state).getBorders();
+				List<Point2D> indBorder = borders.get(state).getBorders();
 				statePolygonMap.put(state, getStatePolygon(indBorder));
 			}catch(Exception e){
 				logger.error("Error creating a polygon for state:{}",state, e);
@@ -106,21 +81,13 @@ public class FinderServiceImpl implements FinderService {
 		return statePolygonMap;
 	}
 	
-	private SimplePolygon2D getStatePolygon(List<Border> indBorder){
+	private SimplePolygon2D getStatePolygon(List<Point2D> indBorder){
 		SimplePolygon2D statePolygon = new SimplePolygon2D();
-		ListIterator<Border> listIterator = indBorder.listIterator(indBorder.size());
+		ListIterator<Point2D> listIterator = indBorder.listIterator(indBorder.size());
 		while(listIterator.hasPrevious()){
-				statePolygon.addVertex(getPointFromBorder(listIterator.previous()));
+				statePolygon.addVertex(listIterator.previous());
 			}
 		return statePolygon;
-	}
-	
-	private Point2D getPointFromBorder(Border borderSet){
-		//TODO: Change Border attributes to return Double
-		Double lat = borderSet.getLattitude();
-		Double lon = borderSet.getLongitude();
-		Point2D point = new Point2D(lat, lon);
-		return point;
 	}
 	
 	@Override
@@ -131,15 +98,14 @@ public class FinderServiceImpl implements FinderService {
 		String foundState = new String();
 		for(String state : statePolygonMap.keySet()){
 			try{
-				SimplePolygon2D polygon = statePolygonMap.get(state);
-				if(polygon.contains(queryPoints)){
-					foundState= state;
+				if(statePolygonMap.get(state).contains(queryPoints)){
+					foundState = state;
 					break;
 				}
 			}catch(Exception e){
 				logger.error("Error checking for state in FinderServiceImpl.getPointState(lattitude={}, longitude={})", lattitude, longitude, e);
 			}
-			}
+		}
 		
 		return foundState; 
 	}

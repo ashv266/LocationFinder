@@ -8,23 +8,25 @@ import org.slf4j.LoggerFactory;
 
 import com.finder.service.FinderServiceImpl;
 
+import math.geom2d.Point2D;
+
 public class Borders {
 	private Logger logger = LoggerFactory.getLogger(FinderServiceImpl.class);
-	private List<Border> borders = new ArrayList<Border>();
+	private List<Point2D> borders = new ArrayList<Point2D>();
 
 	public Borders() {}
 	
 	public Borders(String coords){
-		List<Border> borderList = new ArrayList<Border>();
+		List<Point2D> borderList = new ArrayList<Point2D>();
 		coords = stripList(coords);
 		String[] bList = coords.split("],");
 		for(String o : bList){
-			Border b = new Border();
 			o = o.replaceAll("[^\\d.,-]","");
 			String[] oCoords = o.split(",");
-			b.setLattitude(Double.parseDouble(oCoords[0]));
-			b.setLongitude(Double.parseDouble(oCoords[1]));
-			borderList.add(b);
+			Point2D borderPoint = new Point2D(Double.parseDouble(oCoords[0]), Double.parseDouble(oCoords[1]));
+//			b.setLattitude(Double.parseDouble(oCoords[0]));
+//			b.setLongitude(Double.parseDouble(oCoords[1]));
+			borderList.add(borderPoint);
 		}
 		borders = borderList;
 	}
@@ -35,11 +37,11 @@ public class Borders {
 		return coords;
 	}
 	
-	public List<Border> getBorders() {
+	public List<Point2D> getBorders() {
 		return borders;
 	}
 
-	public void setBorders(List<Border> borders) {
+	public void setBorders(List<Point2D> borders) {
 		this.borders = borders;
 	}
 	

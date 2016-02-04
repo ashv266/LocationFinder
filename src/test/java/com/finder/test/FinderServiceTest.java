@@ -28,22 +28,27 @@ public class FinderServiceTest extends AbstractTestNGSpringContextTests{
 	
 	private Logger logger = LoggerFactory.getLogger(FinderServiceTest.class);
 	
-	@Test(enabled=false)
-	public void getJSONFileTest() throws IOException, JSONException {
+	@Test(enabled=true)
+	public void testGetJSONFile() throws IOException, JSONException {
 		Map<String, Borders> locations= finderService.getJSONFile();
 		logger.info("This is the locations array: {}, size: {}", locations.get("Washington"), locations.get("Washington").getBorders().size());
 		
 	}
 	
 	@Test(enabled=true)
-	public void getLocationFromFileTest() throws IOException, JSONException{
-		String state = finderService.getLocationFromFile("-68.230807", "47.352148");
+	public void testGetLocationFromFile() throws IOException, JSONException{
+		String state = finderService.getPointState("-68.230807", "47.352148");
 		logger.info("STATE FOUND: {}", state);
 	}
 	
 	@Test(enabled=true)
-	public void getPointStateTest() throws IOException, JSONException{
-		String state = finderService.getPointState( "-79.9764","40.4397");
-		logger.info("STATE FOUND FROM POLYGON: {}", state);
+	public void testGetPointState() throws IOException, JSONException{
+		String state1 = finderService.getPointState( "-79.9764","40.4397");
+		String state2 = finderService.getPointState( "-105.998886","31.39394");
+		logger.info("STATE FOUND FROM POLYGON: {}", state1);
+		logger.info("STATE FOUND FROM POLYGON: {}", state2);
+		
+		assert(state1.equals("Pennsylvania"));
+		assert(state2.equals("Texas"));
 	}
 }
