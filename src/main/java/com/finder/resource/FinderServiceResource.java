@@ -57,10 +57,10 @@ public class FinderServiceResource {
 	@POST
 	@Consumes("application/x-www-form-urlencoded")
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
-	public Response getStateFromCoordinates(@FormParam("latitude") String latitude,@FormParam("longitude") String longitude ){
+	public Response getStateFromCoordinates(@FormParam("longitude") String longitude,@FormParam("latitude") String latitude ){
 		List<String> statesFound = null;
 		try{
-			statesFound = finderService.getPointState(latitude, longitude);
+			statesFound = finderService.getPointState(longitude,latitude);
 		}catch(Exception e){
 			logger.error("FinderServiceResource.getLocations(lattitude:{}, longitude:{}): Error fetching state for coordinates provided",latitude, latitude, e);
 			return Response.serverError().entity(statesFound).build();

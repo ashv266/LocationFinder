@@ -93,11 +93,11 @@ public class FinderServiceImpl implements FinderService {
 	 * @see com.finder.service.FinderService#getPointState(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public List<String> getPointState(String latitude, String longitude) throws IOException, JSONException{
+	public List<String> getPointState(String longitude, String latitude) throws IOException, JSONException{
 		String foundState = new String();
 		List<String> statesFound = new ArrayList<String>();
 		
-		Point2D queryPoints = returnPointFromStringInput(latitude, longitude);
+		Point2D queryPoints = returnPointFromStringInput(longitude, latitude);
 		//Put try catch here to send exception back to resource? There we can send back a string with error notification
 		if(queryPoints.x()==0.0 && queryPoints.y()==0.0)
 			statesFound.add("CHECK YOUR COORDINATES. ARE THEY ALL NUMBERS?");
