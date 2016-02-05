@@ -24,13 +24,19 @@ public class FinderServiceTest extends AbstractTestNGSpringContextTests{
 	private Logger logger = LoggerFactory.getLogger(FinderServiceTest.class);
 	
 	@Test(enabled=true)
-	public void testInputCoords() throws IOException, JSONException{
+	public void testInputCoordsIfInvalid() throws IOException, JSONException{
 		List<String> state = finderService.getPointState("-68.we230807", "47.352148");
 		logger.info("STATE FOUND: {}", state);
 	}
 	
 	@Test(enabled=true)
-	public void testGetPointState() throws IOException, JSONException{
+	public void testInputCoordsIfNotFound() throws IOException, JSONException{
+		List<String> state = finderService.getPointState("-135.900", "47.352148");
+		logger.info("STATE FOUND: {}", state);
+	}
+	
+	@Test(enabled=true)
+	public void testGetPointStateFunctionality() throws IOException, JSONException{
 		List<String> state1 = finderService.getPointState( "-79.9764","40.4397");
 		List<String> state2 = finderService.getPointState( "-105.998886","31.39394");
 		logger.info("STATE FOUND FROM POLYGON: {}", state1);

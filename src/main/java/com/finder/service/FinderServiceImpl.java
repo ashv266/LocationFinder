@@ -23,7 +23,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import com.finder.dto.Borders;
 
-import junit.framework.Assert;
 import math.geom2d.Point2D;
 import math.geom2d.polygon.SimplePolygon2D;
 
@@ -67,6 +66,53 @@ public class FinderServiceImpl implements FinderService {
 	}
 	
 	/*
+	 * Returns the state for query parameters from URL. If the latitudes and longitudes passed in lie within the StateShape defined
+	 * above in getStateShape(), the state from locMap is returned.
+	 * @see com.finder.service.FinderService#getPointState(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<String> getPointState(String longitude, String latitude) throws IOException, JSONException{
+		List<String> statesFound = new ArrayList<String>();
+		
+		Point2D queryPoints = new Point2D();
+		try{
+			queryPoints = returnPointFromStringInput(longitude, latitude);
+			statesFound = getStateFromMap(queryPoints);
+			if(statesFound.isEmpty() || statesFound == null)
+				statesFound.add("Could not locate coordinates. Enter new coordinates.");
+		}catch(Exception e){
+			logger.error("Invalid coordinates received: longitude={}, latitude={}", longitude, latitude);
+			statesFound.add("Check the coordinates entered. Are they valid?");
+		}
+		
+		return statesFound; 
+	}
+	
+	public List<String> getStateFromMap(Point2D queryPoints){
+		List<String> statesFound = new ArrayList<String>();
+		
+		for(String state : locMap.keySet()){
+			try{
+				if(locMap.get(state).contains(queryPoints)){
+					statesFound.add(state);
+					break;
+				}
+			}catch(Exception e){
+				logger.error("Error checking for state in FinderServiceImpl.getPointState(latitude={}, longitude={})", queryPoints.x(), queryPoints.y(), e);
+				statesFound.add("ERROR");
+			}
+		}
+		
+		return statesFound;
+	}
+
+	public Point2D returnPointFromStringInput(String latitude, String longitude){
+		Point2D inPoint = new Point2D();
+		inPoint = new Point2D(Double.parseDouble(latitude), Double.parseDouble(longitude));
+		return inPoint;
+	}
+	
+	/*
 	 * Returns the borders of each state from line read of json file 
 	 */
 	private Borders getBordersFromLineInFile(String line) throws JSONException{
@@ -85,57 +131,6 @@ public class FinderServiceImpl implements FinderService {
 			stateShape.addVertex(listIterator.previous());
 		}
 		return stateShape;
-	}
-	
-	/*
-	 * Returns the state for query parameters from URL. If the latitudes and longitudes passed in lie within the StateShape defined
-	 * above in getStateShape(), the state from locMap is returned.
-	 * @see com.finder.service.FinderService#getPointState(java.lang.String, java.lang.String)
-	 */
-	@Override
-	public List<String> getPointState(String longitude, String latitude) throws IOException, JSONException{
-		String foundState = new String();
-		List<String> statesFound = new ArrayList<String>();
-		
-		Point2D queryPoints = returnPointFromStringInput(longitude, latitude);
-		//Put try catch here to send exception back to resource? There we can send back a string with error notification
-		if(queryPoints.x()==0.0 && queryPoints.y()==0.0)
-			statesFound.add("CHECK YOUR COORDINATES. ARE THEY ALL NUMBERS?");
-		else{
-			for(String state : locMap.keySet()){
-				try{
-					if(locMap.get(state).contains(queryPoints)){
-						foundState = state;
-						statesFound.add(foundState);
-						break;
-					}
-				}catch(Exception e){
-					logger.error("Error checking for state in FinderServiceImpl.getPointState(latitude={}, longitude={})", latitude, longitude, e);
-					statesFound.add("ERROR");
-				}
-			}
-		}
-//		if(statesFound.isEmpty() || statesFound == null)
-//			statesFound.add("NOT FOUND. RE-ENTER COORDINATES");
-		return statesFound; 
-	}
-
-	public Point2D returnPointFromStringInput(String latitude, String longitude){
-		Point2D inPoint = new Point2D();
-		//if(validateInputCoords(latitude,longitude))
-		try{
-			inPoint = new Point2D(Double.parseDouble(latitude), Double.parseDouble(longitude));
-		}catch(Exception e){
-			logger.error("Exception encountered when converting input coordinates to double: latitude={}, longitude={}", latitude, longitude);
-		}
-		return inPoint;
-	}
-	
-	
-	private boolean validateInputCoords(String latitude, String longitude){
-		if(latitude.contains("[a-zA-Z.?]*") & longitude.contains("[a-zA-Z.?]*"))
-			return false;
-		else return true;
 	}
 	
 	
