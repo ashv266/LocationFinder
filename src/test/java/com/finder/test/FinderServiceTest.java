@@ -24,8 +24,8 @@ public class FinderServiceTest extends AbstractTestNGSpringContextTests{
 	private Logger logger = LoggerFactory.getLogger(FinderServiceTest.class);
 	
 	@Test(enabled=true)
-	public void testGetLocationFromFile() throws IOException, JSONException{
-		List<String> state = finderService.getPointState("-68.230807", "47.352148");
+	public void testInputCoords() throws IOException, JSONException{
+		List<String> state = finderService.getPointState("-68.we230807", "47.352148");
 		logger.info("STATE FOUND: {}", state);
 	}
 	

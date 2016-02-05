@@ -1,3 +1,7 @@
+/**
+ * @author Aishwarya Sivaraman
+*/
+
 package com.finder.resource;
 
 import java.util.ArrayList;
@@ -39,7 +43,7 @@ public class FinderServiceResource {
 		try{
 			statesFound = finderService.getPointState(lattitude, longitude);
 		}catch(Exception e){
-			logger.error("FinderServiceResource.getLocations(lattitude:{}, longitude:{})", lattitude, longitude);
+			logger.error("FinderServiceResource.getLocations(lattitude:{}, longitude:{}): Error fetching state for coordinates provided", lattitude, longitude, e);
 			return Response.serverError().entity(statesFound).build();
 		}
 		
@@ -58,11 +62,10 @@ public class FinderServiceResource {
 		try{
 			statesFound = finderService.getPointState(latitude, longitude);
 		}catch(Exception e){
-			logger.error("FinderServiceResource.getLocations(lattitude:{}, longitude:{})",e);
+			logger.error("FinderServiceResource.getLocations(lattitude:{}, longitude:{}): Error fetching state for coordinates provided",latitude, latitude, e);
 			return Response.serverError().entity(statesFound).build();
 		}
 		
-		logger.debug("This is state from curl:state={},latitude={}, longitude={}", statesFound, latitude, longitude);
 		return Response.ok()
 				.entity(statesFound)
 				.header("Access-Control-Allow-Origin", "*")
