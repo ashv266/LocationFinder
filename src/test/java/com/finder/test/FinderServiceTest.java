@@ -26,6 +26,7 @@ public class FinderServiceTest extends AbstractTestNGSpringContextTests{
 	@Test(enabled=true)
 	public void testInputCoordsIfInvalid() throws IOException, JSONException{
 		List<String> state = finderService.getStateForPoint("-68.we230807", "47.352148");
+		
 		logger.info("STATE : {}", state);
 	}
 	
