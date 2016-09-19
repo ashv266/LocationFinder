@@ -15,6 +15,11 @@
            <context:annotation-config/>
            <context:mbean-export/>  
            
+
+           <bean id="appProperties"  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+                <property name="location" value="file:/Users/aishwaryasivaraman/Documents/projects/LocationFinder/src/main/resources/config.properties" />
+           </bean>
+           
 <!--            <import resource="states.json"/>
            <bean id="states"  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
                 <property name="location" value="file:/src/main/java" />

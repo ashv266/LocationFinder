@@ -15,6 +15,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
+import com.finder.dto.SearchResults;
 import com.finder.service.FinderService;
 
 @Component
@@ -34,38 +36,21 @@ public class FinderServiceResource {
 	FinderService finderService;
 	
 	@GET
-	@Path("longitude/{longitude}/latitude/{latitude}")
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
-	public Response getLocation(@PathParam("latitude") String latitude, @PathParam("longitude") String longitude){
-		List<String> statesFound = new ArrayList<String>();
+	public Response getLocation(@QueryParam("latitude") String latitude, @QueryParam("longitude") String longitude,
+			@DefaultValue("1000") @QueryParam("radius") Integer radius,
+			@DefaultValue("") @QueryParam("type") List<String> types,
+			@DefaultValue("") @QueryParam("name") String name){
+		SearchResults response=null;
 		try{
-			statesFound = finderService.getStateForPoint(longitude, latitude);
+			response = finderService.getLocation(longitude, latitude, radius, types, name);
 		}catch(Exception e){
 			logger.error("FinderServiceResource.getLocations(lattitude:{}, longitude:{}): Error fetching state for coordinates provided", latitude, longitude, e);
-			return Response.serverError().entity(statesFound).build();
+			return Response.serverError().entity(response).build();
 		}
 		
 		return Response.ok()
-				.entity(statesFound)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Methods", "GET<POST<DELETE<PUT")
-				.allow("OPTIONS").build();
-	}
-	
-	@POST
-	@Consumes("application/x-www-form-urlencoded")
-	@Produces(MediaType.APPLICATION_JSON_VALUE)
-	public Response getStateFromCoordinates(@FormParam("longitude") String longitude,@FormParam("latitude") String latitude ){
-		List<String> statesFound = null;
-		try{
-			statesFound = finderService.getStateForPoint(longitude,latitude);
-		}catch(Exception e){
-			logger.error("FinderServiceResource.getLocations(lattitude:{}, longitude:{}): Error fetching state for coordinates provided",latitude, latitude, e);
-			return Response.serverError().entity(statesFound).build();
-		}
-		
-		return Response.ok()
-				.entity(statesFound)
+				.entity(response)
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET<POST<DELETE<PUT")
 				.allow("OPTIONS").build();
