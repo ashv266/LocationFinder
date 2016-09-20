@@ -37,7 +37,7 @@ public class FinderServiceImpl implements FinderService {
 	@Value("${places.base.url}")
 	private String placeBaseUrl;
 	
-	@Value("${places.key}")
+	@Value("${api.key}")
 	private String placesKey;
 	
 	private Client client = ClientBuilder.newClient().register(JacksonFeature.class);
@@ -57,12 +57,9 @@ public class FinderServiceImpl implements FinderService {
 				.queryParam("key", placesKey);
 		
 		logger.info("target.request()...({})", target.getUri());
-		String response = target.request("application/json").get(String.class);
-		logger.info("ResponseString:{}", response);
-		//JSONObject responseBody = new JSONObject(response);
-		SearchResults results = mapper.readValue(response, SearchResults.class);
-		logger.info("SearchResults from Google:{}", results);
-		return results;
+		SearchResults response = target.request("application/json").get(SearchResults.class);
+		
+		return response;
 				
 	}
 	
