@@ -25,7 +25,7 @@ echo $APACHE_MAVEN_PATH
 
 echo ""
 
-echo "Building Location Finder Project"
+echo "Building Spot Finder Project"
 ${APACHE_MAVEN_PATH}/bin/mvn clean install
 
 echo ""
