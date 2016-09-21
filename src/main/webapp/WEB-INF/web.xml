@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
-  <module-name>LocationFinderService</module-name>
+  <module-name>SpotFinderService</module-name>
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>classpath:spring/applicationContext.xml</param-value>
@@ -9,11 +9,11 @@
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
   <servlet>
-    <servlet-name>location-finder</servlet-name>
+    <servlet-name>spot-finder</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
     <init-param>
       <param-name>javax.ws.rs.Application</param-name>
-      <param-value>com.finder.application.LocationFinderApplication</param-value>
+      <param-value>com.finder.application.SpotFinderApplication</param-value>
     </init-param>
     <init-param>
     <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
@@ -26,7 +26,7 @@
 <load-on-startup>1</load-on-startup>
 </servlet>
   <servlet-mapping>
-    <servlet-name>location-finder</servlet-name>
+    <servlet-name>spot-finder</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 <servlet>

@@ -1,5 +1,5 @@
 PROJECT_PATH="$PWD"
-WAR_FILE_LOCATION=$PROJECT_PATH/target/LocationFinder-1.0-SNAPSHOT.war
+WAR_FILE_LOCATION=$PROJECT_PATH/target/SpotFinder-1.0-SNAPSHOT.war
 
 if [ -z "$APACHE_TOMCAT_PATH" ]; then
 	echo "Export apache tomcat's path to APACHE_TOMCAT_PATH"
@@ -34,7 +34,7 @@ echo "Writing XML config to "${APACHE_TOMCAT_PATH}/conf
 xml_tag='<Context docBase="'
 xml_end='" path="" reloadable="true"/>'
 
-echo "${xml_tag}${WAR_FILE_LOCATION}${xml_end}" > "${APACHE_TOMCAT_PATH}/conf/location-finder-context.xml"
+echo "${xml_tag}${WAR_FILE_LOCATION}${xml_end}" > "${APACHE_TOMCAT_PATH}/conf/spot-finder-context.xml"
 
 echo ""
 echo "Setup is complete.. Ready to deploy"

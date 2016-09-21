@@ -7,8 +7,8 @@
 ./cleanup.sh
 
 echo ""
-echo "Copying new location-finder webapp to "${APACHE_TOMCAT_PATH}/webapps/location-finder
-sudo cp -r ${PWD}/target/location-finder ${APACHE_TOMCAT_PATH}/webapps/location-finder
+echo "Copying new spot-finder webapp to "${APACHE_TOMCAT_PATH}/webapps/spot-finder
+sudo cp -r ${PWD}/target/spot-finder ${APACHE_TOMCAT_PATH}/webapps/spot-finder
 
 echo ""
 echo "Starting up tomcat"

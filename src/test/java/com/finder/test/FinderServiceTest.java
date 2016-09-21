@@ -37,7 +37,7 @@ public class FinderServiceTest extends AbstractTestNGSpringContextTests{
 		Assert.assertTrue(searchResults.getResults().size()>0);
 	}
 	
-	@Test(enabled=true)
+	@Test(enabled=false)
 	public void testInvalidInputAddress() throws IOException, JSONException, BadRequestException, NotFoundException{
 		SearchResults searchResults = finderService.getPlacesForMidpoint("N+St+Philadelphia", "206+S+13th+St+Philadelphia", 1000, null, "restaurant");
 		logger.info("SearchResults : {}, Status: {}", searchResults.getResults(), searchResults.getStatus());
