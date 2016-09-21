@@ -11,7 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+
+import com.finder.dto.SearchResults;
+import com.finder.exception.BadRequestException;
+import com.finder.exception.JSONParseException;
+import com.finder.exception.NotFoundException;
 import com.finder.service.FinderServiceImpl;
+
+import junit.framework.Assert;
 
 @Test(enabled=true)
 @ComponentScan(basePackages = { "com.finder" })
@@ -23,17 +30,18 @@ public class FinderServiceTest extends AbstractTestNGSpringContextTests{
 	
 	private Logger logger = LoggerFactory.getLogger(FinderServiceTest.class);
 	
-	@Test(enabled=false)
-	public void testInputCoordsIfInvalid() throws IOException, JSONException{
-//		List<String> state = finderService.getStateForPoint("-68.we230807", "47.352148");
-		
-//		logger.info("STATE : {}", state);
+	@Test(enabled=true)
+	public void testIdealInputAddress() throws JSONParseException, BadRequestException, NotFoundException {
+		SearchResults searchResults = finderService.getPlacesForMidpoint("111+N+9th+St+Philadelphia", "206+S+13th+St+Philadelphia", 1000, null, "restaurant");
+		logger.info("SearchResults : {}, Status: {}", searchResults.getResults(), searchResults.getStatus());
+		Assert.assertTrue(searchResults.getResults().size()>0);
 	}
 	
-	@Test(enabled=false)
-	public void testInputCoordsIfNotFound() throws IOException, JSONException{
-//		List<String> state = finderService.getStateForPoint("-135.900", "47.352148");
-//		logger.info("STATE : {}", state);
+	@Test(enabled=true)
+	public void testInvalidInputAddress() throws IOException, JSONException, BadRequestException, NotFoundException{
+		SearchResults searchResults = finderService.getPlacesForMidpoint("N+St+Philadelphia", "206+S+13th+St+Philadelphia", 1000, null, "restaurant");
+		logger.info("SearchResults : {}, Status: {}", searchResults.getResults(), searchResults.getStatus());
+		Assert.assertTrue(searchResults.getResults().size()<=1);
 	}
 	
 	@Test(enabled=false)
