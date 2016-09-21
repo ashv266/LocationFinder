@@ -37,26 +37,11 @@ public class FinderServiceTest extends AbstractTestNGSpringContextTests{
 		Assert.assertTrue(searchResults.getResults().size()>0);
 	}
 	
-	@Test(enabled=false)
+	@Test(enabled=true)
 	public void testInvalidInputAddress() throws IOException, JSONException, BadRequestException, NotFoundException{
-		SearchResults searchResults = finderService.getPlacesForMidpoint("N+St+Philadelphia", "206+S+13th+St+Philadelphia", 1000, null, "restaurant");
+		SearchResults searchResults = finderService.getPlacesForMidpoint("L", "206+S+13th+St+Philadelphia", 1000, null, "restaurant");
 		logger.info("SearchResults : {}, Status: {}", searchResults.getResults(), searchResults.getStatus());
-		Assert.assertTrue(searchResults.getResults().size()<=1);
+		Assert.assertTrue(searchResults.getResults().size()<1);
 	}
 	
-	@Test(enabled=false)
-	public void testGetPointStateFunctionality() throws IOException, JSONException{
-//		List<String> state1 = finderService.getStateForPoint( "-79.9764","40.4397");
-//		List<String> state2 = finderService.getStateForPoint( "-105.998886","31.39394");
-//		logger.info("STATE FROM POINT SET 1: longitude={}, latitude={} => {}", "-79.9764","40.4397",state1);
-//		logger.info("STATE FROM POINT SET 2: longitude={}, latitude={} => {}", "-105.998886","31.39394",state2);
-		
-		List<String> state1Truth = new ArrayList<String>();
-		state1Truth.add("Pennsylvania");
-		List<String> state2Truth = new ArrayList<String>();
-		state2Truth.add("Texas");
-		
-//		assert(state1.equals(state1Truth));
-//		assert(state2.equals(state2Truth));
-	}
 }

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finder.common.Assertions;
+import com.finder.common.Properties;
 import com.finder.common.Utilities;
 import com.finder.dto.Coordinates;
 import com.finder.dto.GeocodedResult;
@@ -78,16 +79,16 @@ public class FinderServiceImpl implements FinderService {
 			Integer radius, List<String> types, String name) throws BadRequestException, JSONParseException, NotFoundException{
 		logger.info("Getting locations from file...({})");
 		WebTarget target = client.target(placeBaseUrl)
-				.queryParam("location", coords.getLatitude()+","+coords.getLongitude())
-				.queryParam("radius", radius)
-				.queryParam("name",  name)
-				.queryParam("key", placesKey);
+				.queryParam(Properties.LOCATION, coords.getLatitude()+","+coords.getLongitude())
+				.queryParam(Properties.RADIUS, radius)
+				.queryParam(Properties.NAME,  name)
+				.queryParam(Properties.KEY, placesKey);
 		
 		logger.info("target.request()...({})", target.getUri());
 		Builder request = target.request("application/json");
 		assertions.assertRequestIsValid(target.getUri(), request);
 		SearchResults results = request.get(SearchResults.class);
-		assertions.assertMappingNotEmpty("SearchResults", results);
+		assertions.assertMappingNotEmpty(Properties.SEARCH_RESULTS, results);
 		return results;
 	}
 
@@ -97,14 +98,14 @@ public class FinderServiceImpl implements FinderService {
 	 */
 	private GeocodedResults getGeocodedResultsFromGoogle(String endpoint) throws BadRequestException, JSONParseException, NotFoundException{
 		WebTarget target = client.target(geocodeBaseUrl)
-				.queryParam("address", endpoint)
-				.queryParam("key", placesKey);
+				.queryParam(Properties.ADDRESS, endpoint)
+				.queryParam(Properties.KEY, placesKey);
 		logger.info("target.request()...({})", target.getUri());
 		Builder request = target.request("application/json");
 		assertions.assertRequestIsValid(target.getUri(), request);
 		
 		GeocodedResults geocodedResults = request.get(GeocodedResults.class);
-		assertions.assertMappingNotEmpty("GeocodedResults", geocodedResults);
+		assertions.assertMappingNotEmpty(Properties.GEOCODED_RESULTS, geocodedResults);
 		
 		return geocodedResults;
 	}
@@ -124,7 +125,7 @@ public class FinderServiceImpl implements FinderService {
 	 * @throws BadRequestException 
 	 */
 	private void assertGivenLocationsAreValid(String origin, String destination) throws BadRequestException {
-		assertions.assertAddressIsNonNull("origin", origin);
-		assertions.assertAddressIsNonNull("destination", destination);
+		assertions.assertAddressIsNonNull(Properties.ORIGIN, origin);
+		assertions.assertAddressIsNonNull(Properties.DESTINATION, destination);
 	}
 }

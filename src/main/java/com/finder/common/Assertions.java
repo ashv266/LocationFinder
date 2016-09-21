@@ -106,7 +106,7 @@ public class Assertions {
 	 * @throws JSONParseException 
 	 */
 	public void assertMappingNotEmpty(String propertyName, Results results) throws JSONParseException {
-		if(results==null || !results.getStatus().equalsIgnoreCase("OK")){
+		if(results==null && !results.getStatus().equalsIgnoreCase("OK")){
 			String message = FinderExceptions.INVALID_MAPPING.getMessage();
 			message = String.format(message, propertyName);
 			logger.info("Throwing 'JsonParseException':{}", message);
