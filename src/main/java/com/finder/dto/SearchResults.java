@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(Include.NON_EMPTY)
-public class SearchResults {
+public class SearchResults extends Results{
 
 	@JsonProperty("html_attributions")
 	private List<String> htmlAttributions;

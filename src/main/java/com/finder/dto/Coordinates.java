@@ -21,6 +21,19 @@ public class Coordinates {
 	@JsonProperty("lng")
 	private String longitude;
 	
+	public Coordinates(){}
+	
+	public Coordinates(String latitude, String longitude){
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
+	
+	//Assert that double values are valid for string conversion
+	public Coordinates(Double latitude, Double longitude){
+		this.latitude = String.valueOf(latitude);
+		this.longitude = String.valueOf(longitude);
+	}
+	
 	/**
 	 * @return the latitude
 	 */

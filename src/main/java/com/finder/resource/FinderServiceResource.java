@@ -24,6 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
+import com.finder.common.Utilities;
+import com.finder.dto.Coordinates;
+import com.finder.dto.GeocodedResult;
 import com.finder.dto.SearchResults;
 import com.finder.service.FinderService;
 
@@ -37,15 +40,40 @@ public class FinderServiceResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
-	public Response getLocation(@QueryParam("latitude") String latitude, @QueryParam("longitude") String longitude,
+	public Response getLocation(@QueryParam("latlgn") String latlng,
+			@DefaultValue("1000") @QueryParam("radius") Integer radius,
+			@DefaultValue("") @QueryParam("type") List<String> types,
+			@DefaultValue("") @QueryParam("name") String name){
+		SearchResults response=null;
+		Coordinates coords = Utilities.getCoordinatesFromString(latlng);
+		
+		try{
+			response = finderService.getLocation(coords, radius, types, name);
+		}catch(Exception e){
+			logger.error("FinderServiceResource.getLocations(Coordinates: {}): Error fetching state for coordinates provided", latlng, e);
+			return Response.serverError().entity(response).build();
+		}
+		
+		return Response.ok()
+				.entity(response)
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET<POST<DELETE<PUT")
+				.allow("OPTIONS").build();
+	}
+	
+	@GET
+	@Path(value = "midpoint/")
+	@Produces(MediaType.APPLICATION_JSON_VALUE)
+	public Response getPlacesForTwoCoords(@QueryParam("origin") String origin,
+			@QueryParam("destination") String destination,
 			@DefaultValue("1000") @QueryParam("radius") Integer radius,
 			@DefaultValue("") @QueryParam("type") List<String> types,
 			@DefaultValue("") @QueryParam("name") String name){
 		SearchResults response=null;
 		try{
-			response = finderService.getLocation(longitude, latitude, radius, types, name);
+			response = finderService.getPlacesForMidpoint(origin, destination, radius, types, name);
 		}catch(Exception e){
-			logger.error("FinderServiceResource.getLocations(lattitude:{}, longitude:{}): Error fetching state for coordinates provided", latitude, longitude, e);
+			logger.error("FinderServiceResource.getLocations(startCoords:{}, endCoords:{}): Error fetching state for coordinates provided", origin, destination, e);
 			return Response.serverError().entity(response).build();
 		}
 		

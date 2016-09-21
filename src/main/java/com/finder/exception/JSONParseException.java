@@ -24,7 +24,7 @@ public class JSONParseException extends JSONException implements Serializable {
 		super(msg);
 	}
 	
-	public JSONParseException( String msg,int errorCode){
+	public JSONParseException( int errorCode,String msg){
 		super(msg);
 		this.errorCode = errorCode;
 	}

@@ -6,6 +6,7 @@ package com.finder.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author aishwaryasivaraman
@@ -15,8 +16,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_EMPTY)
 public class Geometry {
 
+	@JsonProperty(value="location")
 	private Coordinates location;
-	private Coordinates viewport;
+	
+	@JsonProperty(value="location_type")
+	private String locationType;
+	
+	@JsonProperty(value="viewport")
+	private Viewport viewport;
 	
 	/**
 	 * @return the location
@@ -33,13 +40,25 @@ public class Geometry {
 	/**
 	 * @return the viewport
 	 */
-	public Coordinates getViewport() {
+	public Viewport getViewport() {
 		return viewport;
 	}
 	/**
 	 * @param viewport the viewport to set
 	 */
-	public void setViewport(Coordinates viewport) {
+	public void setViewport(Viewport viewport) {
 		this.viewport = viewport;
+	}
+	/**
+	 * @return the locationType
+	 */
+	public String getLocationType() {
+		return locationType;
+	}
+	/**
+	 * @param locationType the locationType to set
+	 */
+	public void setLocationType(String locationType) {
+		this.locationType = locationType;
 	}
 }

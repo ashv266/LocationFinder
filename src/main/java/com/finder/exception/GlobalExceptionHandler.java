@@ -70,18 +70,18 @@ public class GlobalExceptionHandler {
 	}
 	
 	//Catch validation exception on missing method param (binding)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler()
-	@ResponseBody
-	public FinderError handleMethodArgumentTypeMismatchException(HttpResponse response, MissingServletRequestParameterException exception){
-		FinderError finderError = new FinderError();
-		
-		finderError.setStatusCode(HttpStatus.BAD_REQUEST.value());
-		String message = FinderExceptions.REQUIRED_PARAM_REQUEST.getMessage();
-		message = String.format(message,  exception.getClass(), exception.getMessage(), exception.getParameterName());
-		finderError.setMessage(message);
-		finderError.setErrorCode(FinderExceptions.INVALID_PARAM_REQUEST.getErrorCode());
-		
-		return finderError;
-	}
+//	@ResponseStatus(HttpStatus.BAD_REQUEST)
+//	@ExceptionHandler()
+//	@ResponseBody
+//	public FinderError handleMethodArgumentTypeMismatchException(HttpResponse response, MissingServletRequestParameterException exception){
+//		FinderError finderError = new FinderError();
+//		
+//		finderError.setStatusCode(HttpStatus.BAD_REQUEST.value());
+//		String message = FinderExceptions.REQUIRED_PARAM_REQUEST.getMessage();
+//		message = String.format(message,  exception.getClass(), exception.getMessage(), exception.getParameterName());
+//		finderError.setMessage(message);
+//		finderError.setErrorCode(FinderExceptions.INVALID_PARAM_REQUEST.getErrorCode());
+//		
+//		return finderError;
+//	}
 }
